@@ -1,8 +1,11 @@
 import './App.css';
-import Counter from './components/Counter';
+import Average from './components/Average';
+// import React, { useState } from 'react';
+// import Info from './components/Info';
+// import Counter from './components/Counter';
 
 function App() {
-  return <Counter />;
+  return <Average />;
 }
 
 export default App;
