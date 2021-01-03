@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
-import { completeTodo } from "../actions";
-import ReduxContext from "../contexts/ReduxContext";
+import React, { useContext, useEffect, useState } from 'react';
+import { completeTodo } from '../actions';
+import ReduxContext from '../contexts/ReduxContext';
 
 export default function TodoList() {
   const store = useContext(ReduxContext);
-  const [todos, setTodos] = useState(store.getState());
+  const [todos, setTodos] = useState(store.getState().todos);
 
   useEffect(() => {
     const unsubscribe = store.subscribe(() => {
-      setTodos(store.getState());
+      setTodos(store.getState().todos);
     });
     return () => {
       unsubscribe();
@@ -24,7 +24,7 @@ export default function TodoList() {
           }
           if (todo.done) {
             return (
-              <li style={{ textDecoration: "line-through" }}>{todo.text}</li>
+              <li style={{ textDecoration: 'line-through' }}>{todo.text}</li>
             );
           }
           return (
