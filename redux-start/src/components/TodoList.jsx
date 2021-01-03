@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 // import { completeTodo } from '../actions';
 function TodoList({ todos, complete }) {
@@ -10,6 +10,7 @@ function TodoList({ todos, complete }) {
             // store.dispatch(completeTodo(index));
             complete(index);
           }
+
           if (todo.done) {
             return (
               <li style={{ textDecoration: 'line-through' }}>{todo.text}</li>

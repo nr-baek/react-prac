@@ -6,6 +6,8 @@ import React, { useRef } from 'react';
 
 function Form({ add }) {
   const inputRef = useRef();
+
+  console.log(inputRef);
   return (
     <div>
       <input type="text" ref={inputRef} />
