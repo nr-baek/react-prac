@@ -1,10 +1,10 @@
-import React, { useContext, useRef } from "react";
-import { addTodo } from "../actions";
-import ReduxContext from "../contexts/ReduxContext";
+import React, { useRef } from 'react';
 
-export default function Form() {
-  const store = useContext(ReduxContext);
+// 이런 멍청한 컴포넌트같으니라고
+// Dumb Component, Presentational Component
+// view에 대한것에만 집중(로직은 컨테이너에 뺴놓음)
 
+function Form({ add }) {
   const inputRef = useRef();
   return (
     <div>
@@ -15,7 +15,9 @@ export default function Form() {
 
   function click() {
     const todo = inputRef.current.value;
-    store.dispatch(addTodo(todo));
-    inputRef.current.value = "";
+    add(todo);
+    inputRef.current.value = '';
   }
 }
+
+export default Form;

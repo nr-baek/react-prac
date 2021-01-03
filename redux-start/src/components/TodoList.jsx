@@ -1,26 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { completeTodo } from '../actions';
-import ReduxContext from '../contexts/ReduxContext';
+import React from 'react';
 
-export default function TodoList() {
-  const store = useContext(ReduxContext);
-  const [todos, setTodos] = useState(store.getState().todos);
-
-  useEffect(() => {
-    const unsubscribe = store.subscribe(() => {
-      setTodos(store.getState().todos);
-    });
-    return () => {
-      unsubscribe();
-    };
-  }, [store]);
-
+// import { completeTodo } from '../actions';
+function TodoList({ todos, complete }) {
   return (
     <div>
       <ul>
         {todos.map((todo, index) => {
           function click() {
-            store.dispatch(completeTodo(index));
+            // store.dispatch(completeTodo(index));
+            complete(index);
           }
           if (todo.done) {
             return (
@@ -37,3 +25,5 @@ export default function TodoList() {
     </div>
   );
 }
+
+export default TodoList;
