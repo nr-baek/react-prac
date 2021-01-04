@@ -1,4 +1,4 @@
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { Router, Switch, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ErrorBoundary } from 'react-error-boundary';
 
@@ -9,19 +9,19 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 
 // redux
-import store from './redux/store';
+import store, { history } from './redux/create';
 
 function App() {
   return (
     <ErrorBoundary FallbackComponent={Error}>
       <Provider store={store}>
-        <BrowserRouter>
+        <Router history={history}>
           <Switch>
             <Route path="/signin" component={Signin} />
             <Route path="/" exact component={Home} />
             <Route component={NotFound} />
           </Switch>
-        </BrowserRouter>
+        </Router>
       </Provider>
     </ErrorBoundary>
   );

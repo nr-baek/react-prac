@@ -1,13 +1,14 @@
+import { useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import Signin from '../components/Signin';
-import withToken from '../hocs/withToken';
+import SigninContainer from '../containers/SigninContainer';
 
-function SigninPage({ token }) {
+function SigninPage() {
+  const token = useSelector((state) => state.auth.token);
   if (token !== null) {
     return <Redirect to="/" />;
   }
 
-  return <Signin />;
+  return <SigninContainer />;
 }
 
-export default withToken(SigninPage);
+export default SigninPage;
