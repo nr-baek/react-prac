@@ -12,8 +12,10 @@ import NotFound from './pages/NotFound';
 import create from './redux/create';
 import { createBrowserHistory } from 'history';
 import { ConnectedRouter } from 'connected-react-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from './components/Modal';
+
+import produce from 'immer';
 
 // 1. 히스토리를 생성
 const history = createBrowserHistory();
@@ -21,9 +23,45 @@ const history = createBrowserHistory();
 const store = create(history);
 
 function App() {
+  const [state, setState] = useState({
+    books: [
+      {
+        title: 'book1',
+        author: {
+          name: 'Baek',
+          age: 28,
+        },
+      },
+      {
+        title: 'book2',
+        author: {
+          name: 'Mark',
+          age: 40,
+        },
+      },
+    ],
+  });
+
+  useEffect(() => {
+    setState(
+      produce((draft) => {
+        draft.books[0].author.age++;
+      }),
+    );
+  }, []);
+
+  // const newState = produce(state, (draft) => {
+  //   draft.books[0].author.age++;
+  // });
+
+  // console.log(state, newState, state === newState);
+  // console.log(state.books[1] === newState.books[1]);
+
   const [visible, setVisible] = useState(false);
   const show = () => setVisible(true);
   const hide = () => setVisible(false);
+
+  console.log(state);
   return (
     <ErrorBoundary FallbackComponent={Error}>
       {visible && (
