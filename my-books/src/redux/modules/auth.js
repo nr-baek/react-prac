@@ -1,6 +1,6 @@
 import { push } from 'connected-react-router';
+import { put, call, delay, takeEvery } from 'redux-saga/effects';
 import AuthService from '../../services/AuthService';
-import { sleep } from '../../utils';
 
 // namespace
 const namespace = 'my-books/auth';
@@ -32,29 +32,35 @@ export const signinStart = () => ({ type: START });
 export const signinSuccess = (token) => ({ type: SUCCESS, token });
 export const signinFail = (error) => ({ type: FAIL, error });
 
-// thunk
-export const signinThunk = (email, password) => async (
-  dispatch,
-  getState,
-  history,
-) => {
+// saga
+const SIGNIN_SAGA = namespace + '/SIGNIN_SAGA';
+export const signinSagaStart = (email, password) => ({
+  type: SIGNIN_SAGA,
+  payload: { email, password },
+});
+
+export function* signinSaga(action) {
   try {
     // 호출 시작 => 로딩 시작
-    dispatch(signinStart());
-    const token = await AuthService.login(email, password);
+    yield put(signinStart());
+    const { email, password } = action.payload;
+    const token = yield call(AuthService.login, email, password);
     // sleep
-    await sleep(2000);
+    yield delay(2000);
     // 호출 완료 (정상) => 로딩 끝
     // 토큰을 브라우저 어딘가에 저장한다.
     localStorage.setItem('token', token);
-    dispatch(signinSuccess(token));
+    yield put(signinSuccess(token));
     // 페이지를 이동한다.
     // history.push('/');
     // -> dispatch(라우팅을 변경하는 액션 생성자 호출)
-    dispatch(push('/'));
+    yield put(push('/'));
   } catch (error) {
     // 호출 완료 (에러) => 로딩 끝
     console.log(error);
-    dispatch(signinFail(error));
+    yield put(signinFail(error));
   }
-};
+}
+export function* authSaga() {
+  yield takeEvery(SIGNIN_SAGA, signinSaga);
+}

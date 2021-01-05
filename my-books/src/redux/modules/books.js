@@ -1,5 +1,5 @@
-import { sleep } from '../../utils';
 import BookService from '../../services/BookService';
+import { call, put, takeEvery, delay, select } from 'redux-saga/effects';
 
 // namespace
 const namespace = 'my-books/books';
@@ -31,19 +31,30 @@ const bookSuccess = (books) => ({ type: BOOK_SUCCESS, books });
 const bookStart = () => ({ type: BOOK_START });
 const bookFail = (error) => ({ type: BOOK_FAIL, error });
 
-// thunk
-export const getBooksThunk = () => async (dispatch, getState) => {
+const BOOK_SAGA = namespace + '/BOOK_SAGA';
+
+// saga
+function* getBooksSaga() {
+  // side effect 처리 로직
   try {
-    // 서버에 책 리스트 다오.
-    dispatch(bookStart());
+    yield put(bookStart());
+    yield delay(2000);
 
-    await sleep(2000);
+    const token = yield select((state) => state.auth.token);
+    const books = yield call(BookService.getBooks, token);
 
-    const books = await BookService.getBooks(getState().auth.token);
-
-    dispatch(bookSuccess(books));
+    yield put(bookSuccess(books));
   } catch (error) {
     console.log(error);
-    dispatch(bookFail(error));
+    yield put(bookFail(error));
   }
-};
+}
+
+// 사가에 넣을 액션 생성함수
+export const getBooksSagaStart = () => ({ type: BOOK_SAGA });
+
+// 사가 액션 생성자 함수 dispatch시 getBooksSaga함수로직이 실행되기위해 등록을해야됨
+// 등록
+export function* booksSaga() {
+  yield takeEvery(BOOK_SAGA, getBooksSaga); // BOOK_SAGA타입의 액션 dispatch시 getBooksSaga로직 실행
+}
