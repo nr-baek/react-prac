@@ -2,9 +2,7 @@ import { applyMiddleware, createStore } from 'redux';
 import reducer from './modules/reducer';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
-import { createBrowserHistory } from 'history';
-
-export const history = createBrowserHistory();
+import { routerMiddleware } from 'connected-react-router';
 
 /*
 {
@@ -13,12 +11,22 @@ export const history = createBrowserHistory();
 }
 */
 
-const store = createStore(
-  reducer,
-  {
-    auth: { token: localStorage.getItem('token'), loading: false, error: null },
-  },
-  composeWithDevTools(applyMiddleware(thunk.withExtraArgument(history))),
-);
+const create = (history) =>
+  createStore(
+    reducer(history),
+    {
+      auth: {
+        token: localStorage.getItem('token'),
+        loading: false,
+        error: null,
+      },
+    },
+    composeWithDevTools(
+      applyMiddleware(
+        thunk.withExtraArgument(history),
+        routerMiddleware(history),
+      ),
+    ),
+  );
 
-export default store;
+export default create;
