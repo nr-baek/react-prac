@@ -1,5 +1,6 @@
 import { Button } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
+import React from 'react';
 
 /*
 
@@ -15,17 +16,17 @@ url: "http://www.yes24.com/Product/Goods/93522583"
 
 */
 
-export default function BookItem({ title, author, message, url }) {
-  return (
-    <div>
-      <h2>
-        {title}{' '}
-        <a href={url} target="_BLANK" rel="noreferrer">
-          <Button icon={<HomeOutlined />} />
-        </a>
-      </h2>
-      <h3>{author}</h3>
-      <p>{message}</p>
-    </div>
-  );
-}
+const BookItem = React.memo(({ title, author, message, url }) => (
+  <div>
+    <h2>
+      {title}{' '}
+      <a href={url} target="_BLANK" rel="noreferrer">
+        <Button icon={<HomeOutlined />} />
+      </a>
+    </h2>
+    <h3>{author}</h3>
+    <p>{message}</p>
+  </div>
+));
+
+export default BookItem;
